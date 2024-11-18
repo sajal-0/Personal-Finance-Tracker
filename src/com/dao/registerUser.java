@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.user.User;
 import com.utility.DataConnection;
 
 public class registerUser {
@@ -46,6 +47,47 @@ public class registerUser {
 			return false;
 		}
 	}
+	
+	public boolean updateUser(User user) {
+	    String sql = "UPDATE Users SET email = ?, password = ? WHERE userID = ?";
+
+	    try (Connection conn = DataConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        // Set the parameters from the User object
+	        stmt.setString(1, user.getEmail());
+	        stmt.setString(2, user.getPassword());
+	        stmt.setInt(3, user.getUserID());
+
+	        // Execute update query
+	        return stmt.executeUpdate() > 0;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	public boolean deleteUser(int userID) {
+	    // SQL to delete user data
+	    String sql = "DELETE FROM Users WHERE userID = ?";
+
+	    try (Connection conn = DataConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        // Set the userID parameter
+	        stmt.setInt(1, userID);
+
+	        // Execute delete query
+	        return stmt.executeUpdate() > 0;
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+ 
 }
 
 
