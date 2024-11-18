@@ -107,4 +107,50 @@ public class UserTransaction {
 			return false;
 		}
 	}
+	
+	public double getTotalIncome(int userID) {
+        String sql = "SELECT SUM(amount) AS totalIncome FROM Transactions WHERE userID = ? AND type = 'income'";
+        double totalIncome = 0.0;
+
+        try (Connection conn = DataConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Set the userID parameter
+            stmt.setInt(1, userID);
+
+            // Execute the query and process the result
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    totalIncome = rs.getDouble("totalIncome");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalIncome;
+    }
+	public double getTotalExpense(int userID) {
+	    String sql = "SELECT SUM(amount) AS totalExpense FROM Transactions WHERE userID = ? AND type = 'expense'";
+	    double totalExpense = 0.0;
+
+	    try (Connection conn = DataConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        stmt.setInt(1, userID);
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                totalExpense = rs.getDouble("totalExpense");
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return totalExpense;
+	}
+
 }
